@@ -13,14 +13,6 @@ ENV ZABBIX_VERSION=5.0.3 \
 
 ### Zabbix pre installation steps
 RUN set -ex && \
-    addgroup -g 10050 zabbix && \
-    adduser -S -D -H -h /dev/null -s /sbin/nologin -G zabbix -u 10050 zabbix && \
-    mkdir -p /etc/zabbix && \
-    mkdir -p /etc/zabbix/zabbix_agentd.d && \
-    mkdir -p /var/lib/zabbix && \
-    mkdir -p /var/lib/zabbix/enc && \
-    mkdir -p /var/lib/zabbix/modules && \
-    chown --quiet -R zabbix:root /var/lib/zabbix && \
     apk update && \
     apk upgrade && \
     apk add \
@@ -38,29 +30,6 @@ RUN set -ex && \
             openssl-dev \
             pcre-dev && \
     \
-    mkdir -p /usr/src/zabbix && \
-    curl -sSL https://github.com/zabbix/zabbix/archive/${ZABBIX_VERSION}.tar.gz | tar xfz - --strip 1 -C /usr/src/zabbix && \
-    cd /usr/src/zabbix && \
-    ./bootstrap.sh 1>/dev/null && \
-    export CFLAGS="-fPIC -pie -Wl,-z,relro -Wl,-z,now" && \
-    ./configure \
-            --prefix=/usr \
-            --silent \
-            --sysconfdir=/etc/zabbix \
-            --libdir=/usr/lib/zabbix \
-            --datadir=/usr/lib \
-            --enable-agent \
-            --enable-ipv6 \
-            --with-openssl && \
-    make -j"$(nproc)" -s 1>/dev/null && \
-    cp src/zabbix_agent/zabbix_agentd /usr/sbin/zabbix_agentd && \
-    cp src/zabbix_sender/zabbix_sender /usr/sbin/zabbix_sender && \
-    cp conf/zabbix_agentd.conf /etc/zabbix && \
-    mkdir -p /etc/zabbix/zabbix_agentd.conf.d && \
-    mkdir -p /var/log/zabbix && \
-    chown -R zabbix:root /var/log/zabbix && \
-    chown --quiet -R zabbix:root /etc/zabbix && \
-    rm -rf /usr/src/zabbix && \
 ### Install MailHog
     apk add --no-cache -t .mailhog-build-deps \
             go \
