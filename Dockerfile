@@ -2,14 +2,11 @@ FROM alpine:edge
 LABEL maintainer="Dave Conroy (dave at tiredofit dot ca)"
 
 ### Set defaults
-ENV ZABBIX_VERSION=5.0.3 \
-    S6_OVERLAY_VERSION=v2.1.0.0 \
+ENV S6_OVERLAY_VERSION=v2.1.0.0 \
     DEBUG_MODE=FALSE \
     TIMEZONE=Etc/GMT \
     ENABLE_CRON=TRUE \
-    ENABLE_SMTP=TRUE \
-    ENABLE_ZABBIX=TRUE \
-    ZABBIX_HOSTNAME=alpine
+    ENABLE_SMTP=TRUE 
 
 ### Zabbix pre installation steps
 RUN set -ex && \
